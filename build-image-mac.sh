@@ -24,4 +24,4 @@ echo "[2/3] 导出镜像到 mingyu-image.tar ..."
 docker save -o ../mingyu-image.tar mingyu:latest
 
 echo "[3/3] 完成！镜像文件：$(cd .. && pwd)/mingyu-image.tar"
-echo "接下来：把该文件拷到绿联 NAS，在 Docker 应用里「镜像 → 导入」，然后创建容器（端口 3000:3000，重启策略 always）。详见《绿联NAS部署指南.md》。"
+echo "接下来：把该文件拷到绿联 NAS，在 Docker 应用里「镜像 → 导入」，然后创建容器（端口 9801:3000，重启策略 always）。详见《绿联NAS部署指南.md》。"

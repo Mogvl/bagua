@@ -28,7 +28,7 @@ cp .env.example .env        # 可选：配置端口 / DeepSeek AI Key
 docker compose -f docker-compose.ugreen.yml up -d --build
 ```
 
-浏览器访问 `http://NAS的IP:3000`。详细步骤、免 SSH 导入方式、AI 配置与 FAQ 见《绿联NAS部署指南.md》。
+浏览器访问 `http://NAS的IP:9801`。详细步骤、免 SSH 导入方式、AI 配置与 FAQ 见《绿联NAS部署指南.md》。
 
 ## ⚠️ 许可说明
 

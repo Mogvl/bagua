@@ -6,7 +6,7 @@
 # 停止：    docker compose -f docker-compose.ugreen.yml down
 # 查看日志：docker compose -f docker-compose.ugreen.yml logs -f
 #
-# 端口说明：宿主机端口默认 3000，可用 .env 里的 UGREEN_PORT 修改
+# 端口说明：宿主机端口默认 9801，可用 .env 里的 UGREEN_PORT 修改
 # 重启策略：restart: always —— NAS 重启后容器自动拉起
 # ============================================================
 
@@ -20,7 +20,7 @@ services:
     container_name: mingyu
     restart: always
     ports:
-      - "${UGREEN_PORT:-3000}:3000"
+      - "${UGREEN_PORT:-9801}:3000"
     environment:
       # ---- AI 解读（可选）。不配置也能正常排盘/起卦 ----
       AI_API_KEY: ${AI_API_KEY:-}

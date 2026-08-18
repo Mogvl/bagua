@@ -70,7 +70,7 @@ docker ps | grep mingyu
 docker compose -f docker-compose.ugreen.yml logs -f
 ```
 
-浏览器访问 `http://NAS的IP:3000`，看到命语界面即部署成功。
+浏览器访问 `http://NAS的IP:9801`，看到命语界面即部署成功。
 
 ---
 
@@ -98,10 +98,10 @@ chmod +x build-image-mac.sh
 1. 把 `mingyu-image.tar` 拷贝到绿联 NAS 任意共享文件夹；
 2. 绿联 Docker 应用 → **镜像 → 导入** → 选择该文件；
 3. 导入完成后在**镜像列表**找到 `mingyu:latest` → **创建容器**：
-   - **端口映射**：`3000 → 3000`
+   - **端口映射**：`9801 → 3000`（左侧为宿主机端口）
    - **重启策略**：`总是重启`（always，保证 NAS 重启后自动拉起）
    - **环境变量**（可选，见第五节）
-4. 启动容器后，浏览器访问 `http://NAS的IP:3000`。
+4. 启动容器后，浏览器访问 `http://NAS的IP:9801`。
 
 ---
 
@@ -156,8 +156,8 @@ docker rmi mingyu:latest
 **Q1：构建时拉取 `node:22-alpine` 失败 / 极慢？**
 国内网络问题。在绿联 Docker 设置中配置镜像加速源（如 `https://docker.m.daocloud.io`），或为 NAS 配置代理后重试。
 
-**Q2：端口 3000 被占用？**
-修改 `.env` 中的 `UGREEN_PORT=3000` 为其他端口（如 8099），浏览器访问 `http://NAS的IP:8099`。
+**Q2：端口 9801 被占用？**
+修改 `.env` 中的 `UGREEN_PORT=9801` 为其他端口（如 8099），浏览器访问 `http://NAS的IP:8099`。
 
 **Q3：NAS 重启后容器没起来？**
 检查容器「重启策略」是否为 always。Compose 方式默认已设置 `restart: always`。
