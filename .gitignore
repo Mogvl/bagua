@@ -1,0 +1,10 @@
+# 环境变量含 API Key，不要提交
+.env
+
+# 本地构建产物
+mingyu-image.tar
+*.tar
+
+# 系统文件
+.DS_Store
+Thumbs.db

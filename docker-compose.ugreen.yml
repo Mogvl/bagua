@@ -1,0 +1,35 @@
+# ============================================================
+# 命语（mingyu）· 绿联 NAS（UGOS Pro）专用 Docker Compose
+# ------------------------------------------------------------
+# 用法（SSH 登录 NAS 后，在本文件所在目录执行）：
+#   docker compose -f docker-compose.ugreen.yml up -d --build
+# 停止：    docker compose -f docker-compose.ugreen.yml down
+# 查看日志：docker compose -f docker-compose.ugreen.yml logs -f
+#
+# 端口说明：宿主机端口默认 3000，可用 .env 里的 UGREEN_PORT 修改
+# 重启策略：restart: always —— NAS 重启后容器自动拉起
+# ============================================================
+
+services:
+  mingyu:
+    build:
+      context: ./mingyu          # 源码目录（本部署包内已包含）
+      args:
+        VITE_ENABLE_DONATION_BOX: ${VITE_ENABLE_DONATION_BOX:-false}
+    image: mingyu:latest
+    container_name: mingyu
+    restart: always
+    ports:
+      - "${UGREEN_PORT:-3000}:3000"
+    environment:
+      # ---- AI 解读（可选）。不配置也能正常排盘/起卦 ----
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.deepseek.com/v1}
+      AI_MODEL: ${AI_MODEL:-deepseek-chat}
+      AI_PROVIDER_NAME: ${AI_PROVIDER_NAME:-DeepSeek}
+      # 置为 true 才启用服务端 AI 解读
+      AI_BUILTIN_ENABLED: ${AI_BUILTIN_ENABLED:-false}
+      AI_DEFAULT_ENABLED: ${AI_DEFAULT_ENABLED:-false}
+    # 可选：限制容器资源（绿联 NAS 上避免占满内存）
+    # mem_limit: 1g
+    # cpus: 2
