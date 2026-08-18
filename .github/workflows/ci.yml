@@ -1,0 +1,36 @@
+# ============================================================
+# CI：push 到 main 时自动验证
+#   job 1: build   —— Node 前端构建检查（pnpm build）
+#   job 2: docker  —— Dockerfile 镜像构建检查（绿联 NAS 部署前置验证）
+# ============================================================
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: pnpm build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Enable pnpm (corepack)
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build frontend
+        run: pnpm build
+
+  docker:
+    name: docker image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (mingyu Dockerfile)
+        run: docker build -t mingyu:ci ./mingyu
