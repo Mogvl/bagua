@@ -1,26 +1,30 @@
 # ============================================================
-# 命语（mingyu）· 绿联 NAS（UGOS Pro）专用 Docker Compose
+# 命语（mingyu）· 绿联 NAS（UGOS Pro）Docker Compose
 # ------------------------------------------------------------
-# 用法（SSH 登录 NAS 后，在本文件所在目录执行）：
-#   docker compose -f docker-compose.ugreen.yml up -d --build
-# 停止：    docker compose -f docker-compose.ugreen.yml down
-# 查看日志：docker compose -f docker-compose.ugreen.yml logs -f
+# 零配置即可用：默认宿主机端口 9801、AI 解读关闭。
+# 无需任何编辑，直接执行：
+#   docker compose up -d --build
 #
-# 端口说明：宿主机端口默认 9801，可用 .env 里的 UGREEN_PORT 修改
-# 重启策略：restart: always —— NAS 重启后容器自动拉起
+# 自定义配置（可选）：复制 .env.example 为 .env 后修改，
+# 或直接运行一键脚本：bash setup.sh
+#
+# 常用命令：
+#   构建启动： docker compose up -d --build
+#   停止：     docker compose down
+#   日志：     docker compose logs -f
 # ============================================================
 
 services:
   mingyu:
     build:
-      context: ./mingyu          # 源码目录（本部署包内已包含）
+      context: ./mingyu          # 命语源码目录（本仓库已附带）
       args:
         VITE_ENABLE_DONATION_BOX: ${VITE_ENABLE_DONATION_BOX:-false}
     image: mingyu:latest
     container_name: mingyu
-    restart: always
+    restart: always               # NAS 重启后自动拉起
     ports:
-      - "${UGREEN_PORT:-9801}:3000"
+      - "${UGREEN_PORT:-9801}:3000"   # 宿主机 9801 → 容器内 3000
     environment:
       # ---- AI 解读（可选）。不配置也能正常排盘/起卦 ----
       AI_API_KEY: ${AI_API_KEY:-}
