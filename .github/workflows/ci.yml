@@ -4,6 +4,9 @@
 #   job 2: docker —— 构建并推送镜像到 ghcr.io/mogvl/bagua:latest
 #                    （绿联 NAS 上 docker compose up -d 直接拉取）
 #   PR 触发时仅验证，不推送镜像
+#
+# 注意：项目源码在 mingyu/ 子目录（根目录无 package.json），
+#       因此用 pnpm/action-setup 显式安装 pnpm，并在 mingyu/ 下执行。
 # ============================================================
 name: ci
 
@@ -20,14 +23,20 @@ jobs:
   build:
     name: pnpm build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mingyu
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: pnpm
-      - name: Enable pnpm (corepack)
-        run: corepack enable
+          cache-dependency-path: mingyu/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build frontend
@@ -37,7 +46,7 @@ jobs:
     name: docker image (ghcr.io/mogvl/bagua)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GHCR

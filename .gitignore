@@ -1,6 +1,8 @@
 # 本地构建产物
 mingyu-image.tar
 *.tar
+node_modules/
+dist/
 
 # 系统文件
 .DS_Store
