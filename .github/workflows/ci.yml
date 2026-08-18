@@ -1,7 +1,9 @@
 # ============================================================
-# CI：push 到 main 时自动验证
-#   job 1: build   —— Node 前端构建检查（pnpm build）
-#   job 2: docker  —— Dockerfile 镜像构建检查（绿联 NAS 部署前置验证）
+# CI：push 到 main 时自动验证 + 发布 Docker 镜像
+#   job 1: build  —— Node 前端构建检查（pnpm build）
+#   job 2: docker —— 构建并推送镜像到 ghcr.io/mogvl/bagua:latest
+#                    （绿联 NAS 上 docker compose up -d 直接拉取）
+#   PR 触发时仅验证，不推送镜像
 # ============================================================
 name: ci
 
@@ -9,6 +11,10 @@ on:
   push:
     branches: [main]
   pull_request:
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build:
@@ -28,9 +34,23 @@ jobs:
         run: pnpm build
 
   docker:
-    name: docker image build
+    name: docker image (ghcr.io/mogvl/bagua)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build image (mingyu Dockerfile)
-        run: docker build -t mingyu:ci ./mingyu
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./mingyu
+          push: ${{ github.event_name == 'push' }}
+          tags: ghcr.io/mogvl/bagua:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

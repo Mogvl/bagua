@@ -1,0 +1,30 @@
+# ============================================================
+# 命语（mingyu）· 源码构建方式（备选）
+# ------------------------------------------------------------
+# 默认推荐使用 docker-compose.yml（直接拉取 GitHub Actions
+# 自动发布的 ghcr.io/mogvl/bagua 镜像，无需本地构建）。
+#
+# 本文件用于需要从源码构建的场合（如无外网拉镜像、想改源码）：
+#   docker compose -f docker-compose.build.yml up -d --build
+# ============================================================
+
+services:
+  mingyu:
+    build:
+      context: ./mingyu          # 命语源码目录（本仓库已附带）
+      args:
+        VITE_ENABLE_DONATION_BOX: ${VITE_ENABLE_DONATION_BOX:-false}
+    image: mingyu:latest
+    container_name: mingyu
+    restart: unless-stopped
+    environment:
+      PORT: 9801
+      # ---- AI 解读（可选）。留空则关闭 ----
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_BASE_URL: https://api.deepseek.com/v1
+      AI_MODEL: deepseek-chat
+      AI_PROVIDER_NAME: DeepSeek
+      AI_BUILTIN_ENABLED: ${AI_BUILTIN_ENABLED:-false}
+      AI_DEFAULT_ENABLED: "false"
+    ports:
+      - "9801:9801"

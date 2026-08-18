@@ -25,4 +25,4 @@ Write-Host "[2/3] 导出镜像到 mingyu-image.tar ..." -ForegroundColor Cyan
 docker save -o (Join-Path $PSScriptRoot "mingyu-image.tar") mingyu:latest
 
 Write-Host "[3/3] 完成！镜像文件：$PSScriptRoot\mingyu-image.tar" -ForegroundColor Green
-Write-Host "接下来：把该文件拷到绿联 NAS，在 Docker 应用里「镜像 → 导入」，然后创建容器（端口 9801:3000，重启策略 always）。详见《绿联NAS部署指南.md》。"
+Write-Host "接下来：把该文件拷到绿联 NAS，在 Docker 应用里「镜像 → 导入」，然后创建容器（端口 9801:9801，环境变量 PORT=9801，重启策略 always）。详见《绿联NAS部署指南.md》。"
