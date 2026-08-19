@@ -34,6 +34,29 @@ services:
 
 > ⚠️ 首次使用需等镜像发布：仓库 push 后 GitHub Actions 会在几分钟内把镜像构建并推送到 `ghcr.io/mogvl/bagua:latest`（可在仓库 Actions 页看状态）。若 NAS 拉不到镜像，可临时用 `bash setup.sh --build` 从源码构建。
 
+## 本地运行（本机电脑）
+
+**方式 1：Docker（推荐，拉取已发布的镜像，无需构建）**
+
+```bash
+docker run -d --name mingyu -p 9801:9801 -e PORT=9801 --restart=unless-stopped ghcr.io/mogvl/bagua:latest
+```
+
+浏览器打开 `http://localhost:9801`。停止：`docker rm -f mingyu`
+
+**方式 2：无 Docker，Node ≥ 20 直接运行**
+
+```bash
+git clone git@github.com:Mogvl/bagua.git
+cd bagua/mingyu
+npm i -g pnpm@11.9.0        # 或 corepack enable
+pnpm install
+pnpm build
+PORT=9801 npx tsx --tsconfig tsconfig.app.json server/docker-server.ts
+```
+
+浏览器打开 `http://localhost:9801`（Windows PowerShell：`$env:PORT=9801; npx tsx ...`）
+
 ## 仓库结构
 
 ```
